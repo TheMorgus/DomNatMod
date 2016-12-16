@@ -1,0 +1,42 @@
+
+
+Class Dominions_Nation_File
+
+	INIT(filepath)
+		-attribute- Filepath
+		-attribute- Maxlines
+
+	----- Loading Based Code -----
+
+	method find_wordkey_line(Word):
+		look through file line by line until key is found.
+		return file.seek() position
+
+	method find_wordkey_string(Word):
+		look through a single line, if word found return true
+		#If Stat found in line can be used with method to get the value
+		#If "END" found in line, can be used to stop search.
+
+	method extract_value_in_string():
+		cut value out of a string
+
+
+
+
+
+
+	method map_weapons(weapon attributes with value list, weapon attributes by existence list):
+		For item in weapon attribute in value list:
+			get value
+			append a list of tuples of (AttributeWithValue, Value)
+			if end found before value:
+				attribute doesn't exist
+		For item in ExistenceAttributes:
+			if ExistenceAttributes found:
+				append list of ExistenceAttributes
+				
+		Return(ListOfTuples, ListOfExistenceAttributes)
+
+
+
+
