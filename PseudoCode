@@ -1,13 +1,30 @@
+Class DominationNatMod
+	Attributes:
+		-Mod info ## a dictionary in the form -- "Command : Value"
+		-Weapons (class)
+		-Armors (class)
+		-Units (class)
+		-names
+		-sites
+		-nations
+		-spells
+		-magic items
+		-general
+		-poptypes
+		-mercenaries
+		-events
 
 
-Class Dominions_Nation_File
+
+
+Class DominionsNationFileManipulator
 
 	INIT(filepath)
 		-attribute- Filepath
 		-attribute- Maxlines
 
 	----- Loading Based Code -----
-
+	--Basic Functions--
 	method find_wordkey_line(Word):
 		look through file line by line until key is found.
 		return file.seek() position
@@ -23,6 +40,14 @@ Class Dominions_Nation_File
 
 
 
+	--Expanded Functions--
+	method find_mod_information():
+		Until new weapon is found:   ## Because new weapon means were past the mod info load order
+			if line starts with "#":
+				get that command
+				if that command is in the mod order list of command:
+					strip command to get the value
+					
 
 
 	method map_weapons(weapon attributes with value list, weapon attributes by existence list):

@@ -1,4 +1,4 @@
-modinfocommands [
+modinfocommands = [
 								"#modname",
 								"#description",
 								"#icon", #not retuired
