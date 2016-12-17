@@ -83,3 +83,11 @@ modweaponscommands = [
 								"#uwok",
 								"#nouw"
 								]
+modarmorcommands = [
+								"#name",
+								"#type",
+								"#prot",
+								"#def",
+								"#enc",
+								"#rcost",
+								]
