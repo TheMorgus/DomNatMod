@@ -78,7 +78,7 @@ modweaponscommands = [
 								"#melee50",
 								"#skip",
 								"#skip2",
-								"#flyspr", #special coding (two values)
+								"#flyspr", #special coding for values (two values)
 								"#explspr",
 								"#uwok",
 								"#nouw"

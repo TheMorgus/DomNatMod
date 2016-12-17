@@ -3,7 +3,7 @@ import SpecialWords
 class DomNationMod:
 	def __init__(self):
 		self.modinfo = {} #Dictionary of --Command:Value-- pairs
-		self.weapons = []
+		self.weapons = [] #List of Dictionary --Command:Value-- pairs, each dict represents a seperate weapon modification
 		self.armors = []
 		self.units = []
 		self.names = []
@@ -18,7 +18,7 @@ class DomNationMod:
 class FileManipulator:
 	def __init__(self, filepath):
 		self.filepath = filepath
-		self.thefile = open(filepath)
+		self.thefile = self.getfile()
 		
 	
 	#def search_line_for_string(thestring, theline):
@@ -26,7 +26,18 @@ class FileManipulator:
 			#return True
 		#else:
 			#return False
-			
+	def getfile(self):
+		filestream = open(self.filepath)
+		filelist = []
+		for line in filestream:
+			if line.strip() == "":
+				pass
+			elif line[0:2] == "--":
+				pass
+			else:
+				filelist.append(line.strip())
+		filestream.close()
+		return(filelist)
 	#finds and returns the command present at the start of the line
 	def get_line_command(self, theline):
 		command = ""
@@ -48,8 +59,9 @@ class FileManipulator:
 	#searches for modinfo commands until the newweapon portion of load order is reached
 	#returns a dictionary of modinfo commands and their respective values
 	def get_mod_info(self):
-		self.thefile.seek(0)
 		end = False
+		value = ""
+		command = ""
 		modinfodictionary = {}
 		while end == False:
 			for line in self.thefile:
@@ -63,10 +75,30 @@ class FileManipulator:
 						modinfodictionary[command] = value
 		return(modinfodictionary)
 
-path = "/home/morg/Desktop/Agholt.dm"
-
-agholtmanip = FileManipulator(path)
-
-Agholt = DomNationMod
-Agholt.modinfo = agholtmanip.get_mod_info()
-print(Agholt.modinfo)
+	#get all the indexes for the start of weapon modifications
+	def get_weapon_indexes(self):
+		weaponindexes = []
+		for i, theline in enumerate(self.thefile):
+			if "#newweapon" in theline or "#selectweapon" in theline:
+				weaponindexes.append(i)
+		return(weaponindexes)
+		
+	#gets weapon info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
+	def get_weapon_info(self, index):
+		weapondict = {}
+		newfile = self.thefile[index:]
+		for line in newfile:
+			if "#end" in line:
+				break
+			command = self.get_line_command(line)
+			value = self.get_line_value(line,command)
+			weapondict[command] = value
+		return(weapondict)	
+		
+	#Gets all weapon dictionarys, puts them in a list, and returns them
+	def get_all_weapons(self):
+		allweapons = []
+		indexes = self.get_weapon_indexes()
+		for index in indexes:
+			allweapons.append(self.get_weapon_info(index))
+		return(allweapons)
