@@ -3,7 +3,7 @@ import SpecialWords
 class DomNationMod:
 	def __init__(self):
 		self.modinfo = {} #Dictionary of --Command:Value-- pairs
-		self.weapons = [] #List of Dictionary --Command:Value-- pairs, each dict represents a seperate weapon modification
+		self.weapons = [] #List of Dictionarys of --Command:Value-- pairs. Each dict represents a seperate weapon modification
 		self.armors = []
 		self.units = []
 		self.names = []
@@ -19,13 +19,7 @@ class FileManipulator:
 	def __init__(self, filepath):
 		self.filepath = filepath
 		self.thefile = self.getfile()
-		
-	
-	#def search_line_for_string(thestring, theline):
-		#if thestring in theline == True:
-			#return True
-		#else:
-			#return False
+
 	def getfile(self):
 		filestream = open(self.filepath)
 		filelist = []
@@ -49,9 +43,12 @@ class FileManipulator:
 		return(command)
 		
 	#Gets the value present in a line. Optional tostrip argument should be a line command (ex. #attk).
-	def get_line_value(self, line, tostrip = ""):  #!!In future, make code to remove any comments in file from value!!
+	def get_line_value(self, line, tostrip = ""):  
 		if tostrip != "":
 			value = line.strip(tostrip)
+			if "--" in line: #Should work to remove comments, untested atm.
+				indexremove = line.index("--")
+				line = line[:indexremove]
 			value = value.strip()
 			value = value.strip('"')
 			return(value)
@@ -76,7 +73,7 @@ class FileManipulator:
 		return(modinfodictionary)
 
 	#get all the indexes for the start of weapon modifications
-	def get_weapon_indexes(self):
+	def get_weapon_indexes(self):     #!!!change to get indexes of whatver you're looking for!!!!
 		weaponindexes = []
 		for i, theline in enumerate(self.thefile):
 			if "#newweapon" in theline or "#selectweapon" in theline:

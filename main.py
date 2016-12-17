@@ -10,5 +10,5 @@ Agholt.modinfo = agholtmanip.get_mod_info()
 Agholt.weapons = agholtmanip.get_all_weapons()
 
 for weapon in Agholt.weapons:
-	print(weapon)
-	print("\n" * 5)
+	for key in weapon:
+		print(key, weapon[key])

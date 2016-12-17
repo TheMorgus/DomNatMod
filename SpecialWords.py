@@ -276,7 +276,7 @@ modmonstercommands = [
 								"#pillagebonus",
 								"#supplybonus",
 								"#resources",
-								"#iceforging".
+								"#iceforging",
 								"#neednoteat",
 								"#nobadevents",
 								"#incunrest",
