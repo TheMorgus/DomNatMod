@@ -3,8 +3,8 @@ import SpecialWords
 class DomNationMod:
 	def __init__(self):
 		self.modinfo = {} #Dictionary of --Command:Value-- pairs
-		self.weapons = [] #List of Dictionarys of --Command:Value-- pairs. Each dict represents a seperate weapon modification
-		self.armors = []
+		self.weapons = [] #List of Dictionaries of --Command:Value-- pairs. Each dict represents a seperate weapon modification
+		self.armors = [] #List of Dictionaries of --Command:Value-- pairs. Each dict = an armor.
 		self.units = []
 		self.names = []
 		self.nations = []
@@ -94,9 +94,30 @@ class FileManipulator:
 		
 	#Gets all weapon dictionarys, puts them in a list, and returns them
 	def get_all_weapons(self):
+		allweapons = []
 		indexes = []
 		indexes = self.get_item_indexes("#newweapon")
 		indexex = indexes + self.get_item_indexes("#selectweapon")
 		for index in indexes:
 			allweapons.append(self.get_weapon_info(index))
 		return(allweapons)
+	
+	def get_armor_info(self,index):
+		armordict = {}
+		newfile = self.thefile[index:]
+		for line in newfile:
+			if "#end" in line:
+				break
+			command = self.get_line_command(line)
+			value = self.get_line_value(line,command)
+			armordict[command] = value
+		return(armordict)
+	
+	def get_all_armors(self):
+		allarmors = []
+		indexes = []
+		indexes = self.get_item_indexes("#newarmor")
+		indexes = indexes + self.get_item_indexes("#selectarmor")
+		for index in indexes:
+			allarmors.append(self.get_armor_info(index))
+		return(allarmors)
