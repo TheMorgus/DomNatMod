@@ -145,7 +145,6 @@ class FileManipulator:
 	def get_all(self, toget):
 		listofitems = []
 		startindexes = []
-		indexes =[]
 		indexstartkeys = []
 		if toget == "weapons":
 			indexstartkeys = ["#newweapon", "#selectweapon"]
@@ -154,8 +153,7 @@ class FileManipulator:
 		elif toget == "units":
 			indexstartkeys = ["#newmonster", "#selectmonster"]
 		for startkey in indexstartkeys:
-			indexes = self.get_item_indexes(startkey)
-			startindexes += indexes
+			startindexes +=  self.get_item_indexes(startkey)
 		for index in startindexes:
 			listofitems.append(self.get_item_info(index))
 		return(listofitems)
