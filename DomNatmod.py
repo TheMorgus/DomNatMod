@@ -3,17 +3,19 @@ import SpecialWords
 class DomNationMod:
 	def __init__(self):
 		self.modinfo = {} #Dictionary of --Command:Value-- pairs
-		self.weapons = [] #List of Dictionaries of --Command:Value-- pairs. Each dict represents a seperate weapon modification
-		self.armors = [] #List of Dictionaries of --Command:Value-- pairs. Each dict = an armor.
-		self.units = [] #List of Dictionaries of --Command:Value-- pairs. Each dict = a unit.
+		#All others are list of Dictionaries of --Command:Value-- pairs (Even if it doesn't make sense to have a list...)
+		#Such as nation, which will be a list of a single dictionary. Fix later to remove list layer?
+		self.weapons = [] 
+		self.armors = [] 
+		self.units = [] 
 		self.names = []
-		self.nations = []
+		self.nation = []
 		self.spells = []
 		self.magicitems = []
 		self.general = []
 		self.poptypes = []
 		self.mercenaries = []
-		self.events = []
+		self.sites = []
 
 
 
@@ -123,10 +125,12 @@ class FileManipulator:
 		commandswithlist = ["#weapon","#armor","#custommagic","#magicskill"]
 		newfile = self.thefile[index:]
 		for line in newfile:
+			command = self.get_line_command(line)
 			if "#end" in line:
 				break
-			command = self.get_line_command(line)
-			if command in commandswithlist:
+			elif "#" not in line:
+				pass
+			elif command in commandswithlist:
 				value = self.get_line_values(line, command)
 				if command not in itemdict:
 					itemlist = []
@@ -136,12 +140,31 @@ class FileManipulator:
 					itemlist = itemdict[command]
 					itemlist.append(value)
 					itemdict[command] = itemlist
+					
+			#Summary has multiline descriptions so needs different value parsing method to gather desc. from each line	
+			elif command == "#summary":
+				start = False
+				summaryvalue = []
+				for line in newfile:
+					if start == True and "#summary" not in line and "#" in line:
+						itemdict[command] = summaryvalue
+						break
+					elif "#summary" in line:
+						start = True
+						line =line.strip("#summary")
+						line  = line.strip()
+						line = line.strip('"')
+						summaryvalue.append(line)
+					elif start == True and "#":
+						line = line.strip()
+						line = line.strip('"')
+						summaryvalue.append(line)
 			else:
 				value = self.get_line_values(line,command)
 				itemdict[command] = value
 		return(itemdict)	
 	
-	#Gets all mod information of selected type
+	#Gets all mod information of input type
 	def get_all(self, toget):
 		listofitems = []
 		startindexes = []
@@ -152,8 +175,23 @@ class FileManipulator:
 			indexstartkeys = ["#newarmor", "#selectarmor"]
 		elif toget == "units":
 			indexstartkeys = ["#newmonster", "#selectmonster"]
+		elif toget == "spells":
+			indexstartkeys = ["#clearallspells","#selectspell","#newspell"]
+		elif toget == "items":
+			indexstartkeys = ["#clearallitems", "#selectitem", "#newitem"]
+		elif toget ==  "names":
+			indexstartkeys = ["#selectnametype"]
+		elif toget == "mercs":
+			indexstartkeys = ["#clearmerc", "#newmerc"]
+		elif toget == "sites":
+			indexstartkeys = ["#selectsite", "#newsite"]
+		elif toget == "nation":
+			indexstartkeys = ["#indepflag", "#selectnation", "#newnation"]
+		elif toget == "pops":
+			indexstartkeys = ["#selectpoptype"]
 		for startkey in indexstartkeys:
 			startindexes +=  self.get_item_indexes(startkey)
-		for index in startindexes:
-			listofitems.append(self.get_item_info(index))
+		if startindexes != []:
+			for index in startindexes:
+				listofitems.append(self.get_item_info(index))
 		return(listofitems)
