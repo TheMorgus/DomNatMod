@@ -5,7 +5,7 @@ class DomNationMod:
 		self.modinfo = {} #Dictionary of --Command:Value-- pairs
 		self.weapons = [] #List of Dictionaries of --Command:Value-- pairs. Each dict represents a seperate weapon modification
 		self.armors = [] #List of Dictionaries of --Command:Value-- pairs. Each dict = an armor.
-		self.units = []
+		self.units = [] #List of Dictionaries of --Command:Value-- pairs. Each dict = a unit.
 		self.names = []
 		self.nations = []
 		self.spells = []
@@ -89,7 +89,6 @@ class FileManipulator:
 			else:
 				return(value1)
 		
-	#searches for modinfo commands until the newweapon portion of load order is reached
 	#returns a dictionary of modinfo commands and their respective values
 	def get_mod_info(self):
 		end = False
@@ -108,15 +107,15 @@ class FileManipulator:
 						modinfodictionary[command] = value
 		return(modinfodictionary)
 
-	#get all the indexes for the start of weapon modifications
-	def get_item_indexes(self, toindex1):     #!!!change to get indexes of whatver you're looking for!!!!
+	#get all the indexes for a string, which should be a #command that starts a new item type
+	def get_item_indexes(self, toindex):
 		itemindexes = []
 		for i, theline in enumerate(self.thefile):
-			if toindex1 in theline:
+			if toindex in theline:
 				itemindexes.append(i)
 		return(itemindexes)
 		
-	#gets weapon info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
+	#gets info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
 	def get_item_info(self, index):
 		itemdict = {}
 		#these values may have more than one entry per unit, so their values are taken as a list of all values found
@@ -141,7 +140,7 @@ class FileManipulator:
 				itemdict[command] = value
 		return(itemdict)	
 		
-	#Gets all weapon dictionarys, puts them in a list, and returns them
+	
 	def get_all_weapons(self):
 		allweapons = []
 		indexes = []
