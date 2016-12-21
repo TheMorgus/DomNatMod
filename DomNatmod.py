@@ -64,7 +64,7 @@ class FileManipulator:
 		
 			
 	#Gets the value present in a line. Optional tostrip argument should be a line command (ex. #attk).
-	def get_line_values(self, line, tostrip = ""):  ## !! must be able to return two values!! ( as tuple)
+	def get_line_values(self, line, tostrip = ""):  ## !! MUST BE UPDATED TO 3 MAX VALUES!! 
 		value1 = ""
 		value2 = ""
 		value = ""
@@ -117,16 +117,16 @@ class FileManipulator:
 		return(itemindexes)
 		
 	#gets weapon info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
-	def get_weapon_info(self, index):
-		weapondict = {}
+	def get_item_info(self, index):
+		itemdict = {}
 		newfile = self.thefile[index:]
 		for line in newfile:
 			if "#end" in line:
 				break
 			command = self.get_line_command(line)
 			value = self.get_line_values(line,command)
-			weapondict[command] = value
-		return(weapondict)	
+			itemdict[command] = value
+		return(itemdict)	
 		
 	#Gets all weapon dictionarys, puts them in a list, and returns them
 	def get_all_weapons(self):
@@ -135,25 +135,17 @@ class FileManipulator:
 		indexes = self.get_item_indexes("#newweapon")
 		indexex = indexes + self.get_item_indexes("#selectweapon")
 		for index in indexes:
-			allweapons.append(self.get_weapon_info(index))
+			allweapons.append(self.get_item_info(index))
 		return(allweapons)
-	
-	def get_armor_info(self,index):
-		armordict = {}
-		newfile = self.thefile[index:]
-		for line in newfile:
-			if "#end" in line:
-				break
-			command = self.get_line_command(line)
-			value = self.get_line_values(line,command)
-			armordict[command] = value
-		return(armordict)
-	
+
 	def get_all_armors(self):
 		allarmors = []
 		indexes = []
 		indexes = self.get_item_indexes("#newarmor")
 		indexes = indexes + self.get_item_indexes("#selectarmor")
 		for index in indexes:
-			allarmors.append(self.get_armor_info(index))
+			allarmors.append(self.get_item_info(index))
 		return(allarmors)
+	
+	def get_unit_info():
+		pass
