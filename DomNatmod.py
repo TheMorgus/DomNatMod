@@ -73,12 +73,12 @@ class FileManipulator:
 		return(modinfodictionary)
 
 	#get all the indexes for the start of weapon modifications
-	def get_weapon_indexes(self):     #!!!change to get indexes of whatver you're looking for!!!!
-		weaponindexes = []
+	def get_item_indexes(self, toindex1):     #!!!change to get indexes of whatver you're looking for!!!!
+		itemindexes = []
 		for i, theline in enumerate(self.thefile):
-			if "#newweapon" in theline or "#selectweapon" in theline:
-				weaponindexes.append(i)
-		return(weaponindexes)
+			if toindex1 in theline:
+				itemindexes.append(i)
+		return(itemindexes)
 		
 	#gets weapon info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
 	def get_weapon_info(self, index):
@@ -95,7 +95,8 @@ class FileManipulator:
 	#Gets all weapon dictionarys, puts them in a list, and returns them
 	def get_all_weapons(self):
 		allweapons = []
-		indexes = self.get_weapon_indexes()
+		indexes = self.get_item_indexes("#newweapon")
+		indexex = indexes + self.get_item_indexes("#selectweapon")
 		for index in indexes:
 			allweapons.append(self.get_weapon_info(index))
 		return(allweapons)
