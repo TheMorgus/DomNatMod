@@ -119,21 +119,23 @@ class FileManipulator:
 	#gets weapon info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
 	def get_item_info(self, index):
 		itemdict = {}
-		weaponlist = []
+		#these values may have more than one entry per unit, so their values are taken as a list of all values found
+		commandswithlist = ["#weapon","#armor","#custommagic","#magicskill"]
 		newfile = self.thefile[index:]
 		for line in newfile:
 			if "#end" in line:
 				break
 			command = self.get_line_command(line)
-			if command == "#weapon":
+			if command in commandswithlist:
 				value = self.get_line_values(line, command)
-				if "#weapon" not in itemdict:
-					weaponlist.append(value)
-					itemdict[command] = weaponlist
+				if command not in itemdict:
+					itemlist = []
+					itemlist.append(value)
+					itemdict[command] = itemlist
 				else:
-					weaponlist = itemdict[command]
-					weaponlist.append(value)
-					itemdict[command] = weaponlist
+					itemlist = itemdict[command]
+					itemlist.append(value)
+					itemdict[command] = itemlist
 			else:
 				value = self.get_line_values(line,command)
 				itemdict[command] = value
