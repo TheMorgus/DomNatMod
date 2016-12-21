@@ -42,16 +42,50 @@ class FileManipulator:
 				break
 		return(command)
 		
+	def get_line_string(self, line):
+		returnvalue = '"'
+		startindex = line.index('"')
+		line = line[startindex+1:]
+		for letter in line:
+			if letter == '"':
+				returnvalue += letter
+				return(returnvalue)
+			else:
+				returnvalue += letter
+				
+	def get_line_value(self, line):
+		returnvalue = ""
+		for letter in line:
+			if letter is " ":
+				return(returnvalue)
+			else:
+				returnvalue += letter
+		return(returnvalue)
+		
+			
 	#Gets the value present in a line. Optional tostrip argument should be a line command (ex. #attk).
-	def get_line_value(self, line, tostrip = ""):  
+	def get_line_values(self, line, tostrip = ""):  ## !! must be able to return two values!! ( as tuple)
+		value1 = ""
+		value2 = ""
+		value = ""
 		if tostrip != "":
 			value = line.strip(tostrip)
-			if "--" in line: #Should work to remove comments, untested atm.
+			if "--" in line: 
 				indexremove = line.index("--")
-				line = line[:indexremove]
+				value = line[:indexremove]
 			value = value.strip()
-			value = value.strip('"')
-			return(value)
+			if '"' in value:
+				value1 = self.get_line_string(value)
+			else:
+				value1 = self.get_line_value(value)
+			index = value.index(value1)
+			value2 = value[index + len(value1):]
+			value1 = value1.strip()
+			value2 = value2.strip()
+			if value2 != "":
+				return(value1,value2)
+			else:
+				return(value1)
 		
 	#searches for modinfo commands until the newweapon portion of load order is reached
 	#returns a dictionary of modinfo commands and their respective values
@@ -68,7 +102,7 @@ class FileManipulator:
 				if line[0] == "#":
 					command = self.get_line_command(line)
 					if command in SpecialWords.modinfocommands:
-						value = self.get_line_value(line, tostrip = command)
+						value = self.get_line_values(line, tostrip = command)
 						modinfodictionary[command] = value
 		return(modinfodictionary)
 
@@ -88,7 +122,7 @@ class FileManipulator:
 			if "#end" in line:
 				break
 			command = self.get_line_command(line)
-			value = self.get_line_value(line,command)
+			value = self.get_line_values(line,command)
 			weapondict[command] = value
 		return(weapondict)	
 		
@@ -109,7 +143,7 @@ class FileManipulator:
 			if "#end" in line:
 				break
 			command = self.get_line_command(line)
-			value = self.get_line_value(line,command)
+			value = self.get_line_values(line,command)
 			armordict[command] = value
 		return(armordict)
 	
