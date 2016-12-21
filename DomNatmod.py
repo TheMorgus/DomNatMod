@@ -15,6 +15,8 @@ class DomNationMod:
 		self.mercenaries = []
 		self.events = []
 
+
+
 class FileManipulator:
 	def __init__(self, filepath):
 		self.filepath = filepath
@@ -62,7 +64,6 @@ class FileManipulator:
 				returnvalue += letter
 		return(returnvalue)
 		
-			
 	#Gets the value present in a line. Optional tostrip argument should be a line command (ex. #attk).
 	def get_line_values(self, line, tostrip = ""):  ## !! MUST BE UPDATED TO 3 MAX VALUES!! 
 		value1 = ""
@@ -139,31 +140,22 @@ class FileManipulator:
 				value = self.get_line_values(line,command)
 				itemdict[command] = value
 		return(itemdict)	
-		
 	
-	def get_all_weapons(self):
-		allweapons = []
-		indexes = []
-		indexes = self.get_item_indexes("#newweapon")
-		indexex = indexes + self.get_item_indexes("#selectweapon")
-		for index in indexes:
-			allweapons.append(self.get_item_info(index))
-		return(allweapons)
-
-	def get_all_armors(self):
-		allarmors = []
-		indexes = []
-		indexes = self.get_item_indexes("#newarmor")
-		indexes += indexes + self.get_item_indexes("#selectarmor")
-		for index in indexes:
-			allarmors.append(self.get_item_info(index))
-		return(allarmors)
-	
-	def get_all_units(self):
-		allunits = []
-		indexes = []
-		indexes = self.get_item_indexes("#newmonster")
-		indexes += self.get_item_indexes("#selectmonster")
-		for index in indexes:
-			allunits.append(self.get_item_info(index))
-		return(allunits)
+	#Gets all mod information of selected type
+	def get_all(self, toget):
+		listofitems = []
+		startindexes = []
+		indexes =[]
+		indexstartkeys = []
+		if toget == "weapons":
+			indexstartkeys = ["#newweapon", "#selectweapon"]
+		elif toget == "armors":
+			indexstartkeys = ["#newarmor", "#selectarmor"]
+		elif toget == "units":
+			indexstartkeys = ["#newmonster", "#selectmonster"]
+		for startkey in indexstartkeys:
+			indexes = self.get_item_indexes(startkey)
+			startindexes += indexes
+		for index in startindexes:
+			listofitems.append(self.get_item_info(index))
+		return(listofitems)
