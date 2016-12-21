@@ -81,7 +81,9 @@ class FileManipulator:
 			index = value.index(value1)
 			value2 = value[index + len(value1):]
 			value1 = value1.strip()
+			value1 = value1.strip('"')
 			value2 = value2.strip()
+			value2 = value2.strip('"')
 			if value2 != "":
 				return(value1,value2)
 			else:
