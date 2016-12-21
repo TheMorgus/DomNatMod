@@ -94,7 +94,7 @@ class FileManipulator:
 		
 	#Gets all weapon dictionarys, puts them in a list, and returns them
 	def get_all_weapons(self):
-		allweapons = []
+		indexes = []
 		indexes = self.get_item_indexes("#newweapon")
 		indexex = indexes + self.get_item_indexes("#selectweapon")
 		for index in indexes:
