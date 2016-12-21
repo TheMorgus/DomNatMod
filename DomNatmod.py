@@ -70,9 +70,9 @@ class FileManipulator:
 		value = ""
 		if tostrip != "":
 			value = line.strip(tostrip)
-			if "--" in line: 
-				indexremove = line.index("--")
-				value = line[:indexremove]
+			if "--" in value: 
+				indexremove = value.index("--")
+				value = value[:indexremove]
 			value = value.strip()
 			if '"' in value:
 				value1 = self.get_line_string(value)
@@ -119,13 +119,24 @@ class FileManipulator:
 	#gets weapon info from an index up to #end command, returns dictionary of --Command:Value-- Pairs
 	def get_item_info(self, index):
 		itemdict = {}
+		weaponlist = []
 		newfile = self.thefile[index:]
 		for line in newfile:
 			if "#end" in line:
 				break
 			command = self.get_line_command(line)
-			value = self.get_line_values(line,command)
-			itemdict[command] = value
+			if command == "#weapon":
+				value = self.get_line_values(line, command)
+				if "#weapon" not in itemdict:
+					weaponlist.append(value)
+					itemdict[command] = weaponlist
+				else:
+					weaponlist = itemdict[command]
+					weaponlist.append(value)
+					itemdict[command] = weaponlist
+			else:
+				value = self.get_line_values(line,command)
+				itemdict[command] = value
 		return(itemdict)	
 		
 	#Gets all weapon dictionarys, puts them in a list, and returns them
@@ -142,10 +153,16 @@ class FileManipulator:
 		allarmors = []
 		indexes = []
 		indexes = self.get_item_indexes("#newarmor")
-		indexes = indexes + self.get_item_indexes("#selectarmor")
+		indexes += indexes + self.get_item_indexes("#selectarmor")
 		for index in indexes:
 			allarmors.append(self.get_item_info(index))
 		return(allarmors)
 	
-	def get_unit_info():
-		pass
+	def get_all_units(self):
+		allunits = []
+		indexes = []
+		indexes = self.get_item_indexes("#newmonster")
+		indexes += self.get_item_indexes("#selectmonster")
+		for index in indexes:
+			allunits.append(self.get_item_info(index))
+		return(allunits)
